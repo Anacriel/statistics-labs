@@ -12,5 +12,5 @@ See the number in the title of a .py file in src folder to determine the topic
 8. Interval estimations of distribution parameters
 
 # Preview
-![](/reports/preview/prev_1.png){height="50%" width="50%"}
-![](/reports/preview/prev_2.png){height="50%" width="50%"}
+![](/reports/preview/prev_1.png)
+![](/reports/preview/prev_2.png)
