@@ -1,0 +1,41 @@
+\newcommand{\threeimage}[4]{
+\begin{figure}[h!]  
+    \centering 
+    \subfigure[]{
+        \includegraphics[width=0.3\linewidth, height=0.25\linewidth]{#1} 
+        \label{fig:f_ #1} }  
+        %\hspace{4ex}
+    \subfigure[]{
+    \includegraphics[width=0.3\linewidth, height=0.25\linewidth]{#2} 
+    \label{fig:f_ #2} }
+   % \hspace{4ex}
+    \subfigure[]{ 
+        \includegraphics[width=0.3\linewidth, height=0.25\linewidth]{#3} 
+        \label{fig:f_ #3} }  
+    \caption{Выборки из #4 объемом: 
+    \subref{fig:f_ #1} 20; 
+    \subref{fig:f_ #2} 60; 
+    \subref{fig:f_ #3} 100} 
+    \label{fig:f_ #1#2#3}
+\end{figure}}
+
+\newcommand{\triplethreeimage}[4]{
+\begin{figure}[h!]  
+    \centering 
+    \subfigure[]{
+        \includegraphics[width=.83\linewidth, height=.3\linewidth]{#1} 
+        \label{fig:f_ #1} }\\  
+    %\hspace{4ex}
+    \subfigure[]{
+        \includegraphics[width=.83\linewidth, height=.3\linewidth]{#2} 
+        \label{fig:f_ #2} }\\
+    %\hspace{4ex}
+    \subfigure[]{ 
+        \includegraphics[width=.83\linewidth, height=.3\linewidth]{#2} 
+        \label{fig:f_ #3} }  
+    \caption{Для выборок из #4 объемом: 
+    \subref{fig:f_ #1} 20; 
+    \subref{fig:f_ #2} 60; 
+    \subref{fig:f_ #3} 100} 
+    \label{fig:f_ #1#2#3}
+\end{figure}}

@@ -1,0 +1,47 @@
+{ Cгенерировать двумерные выборки $x_n = (x_1, \ldots, x_n), \; y_n = (y_1, \ldots, y_n)$ размерами $n = 20,\;60,\;100$ из нормального двумерного распределения. Коэффициенты корреляции взять равными $\rho = 0, \; 0.5, \; 0.9$. Формула для плотности распределения приведена ниже 
+        \begin{equation}
+            \label{dist_5:1}
+            N(x, y, 0, 0, 1, 1, \rho) = \frac{1}{2\pi \sqrt{1-\rho^2}}exp\left\{-\frac{1}{2(1-\rho^2)}(x^2 - 2\rho xy + y^2)\right\}
+        \end{equation}
+    \indent Каждая выборка генерируется $N = 1000$ раз, и для каждоый выборки вычисляются среднее значение, среднее значение квадрата и дисперсия следующих коэффициентов
+        \begin{equation}
+            \label{coeff_5:1}
+            r_{p} = \frac{\displaystyle \sum_{i=1}^{n}{(x_i - \overline{x})(y_i - \overline{y})}}{\sqrt{\displaystyle{\sum_{i=1}^{n}{(x_i - \overline{x})^2 \sum_{i=1}^{n}(y_i - \overline{y})^2}}}} = \frac{cov(x, y)}{\sqrt{\sigma^2_x \sigma^2_y}} \text{ –– коэффициент корреляции Пирсона,}
+        \end{equation}
+    \indent где $\overline{x}, \; \overline{y}$ –– выборочные средние $x_n, \; y_n$, $\sigma^2_x, \; \sigma^2_y$ –– выборочные дисперсии
+    
+    \begin{equation}
+        \label{coeff_5:2}
+        r_s = \rho_{rg_x, rg_y} = \frac{cov(rg_x, rg_y)}{\sqrt{\sigma^2_x \sigma^2_y}} = 1 - \frac{6 \displaystyle \sum_{i=1}^{n}{d^2_i}}{n(n^2-1)} \text{ –– коэффициент корреляции Спирмена,}
+    \end{equation}
+    \indent где $rg_x, \; rg_y$ –– ранговые переменные, $d_i = rg(x_i) - rg(y_i)$ –– разность двух рангов наблюдений. Формула для рассчета из источника \cite{ms_2}
+    
+    \begin{equation}
+        \label{coeff_5:3}
+        r_q = \frac{(n_{\RNumb{1}} + n_{\RNumb{3}}) - (n_{\RNumb{2}} + n_{\RNumb{4}})}{n} \text{ –– квадрантный коэффициент корреляции,}
+    \end{equation}
+    \indent где $n_i, \; i = \RNumb{1},\; \RNumb{2},\; \RNumb{3},\; \RNumb{4}$ –– число наблюдений, попавших в $i$ - ый квадрант на плоскости
+    
+    \indent Приведем формулы для вычисления выборочного среднего, квадрата выборочного среднего и выборочной дисперсии в двумерном случае
+    \begin{equation}
+        \label{char_5:1}
+        \overline{x}_k = \frac{1}{n}\sum_{i=1}^{n}{x_{i_k}}, \;\; k = 1, \; 2
+    \end{equation}
+    
+    \begin{equation}
+        \label{char_5:2}
+        \overline{x}^2_k = \frac{1}{n}\sum_{i=1}^{n}{x^2_{i_k}}, \;\; k = 1, \; 2
+    \end{equation}
+    
+    \begin{equation}
+        \label{char_5:3}
+        \overline{\sigma}^2_k = \frac{1}{n}\sum_{i=1}^{n}{(x_{i_k}-\overline{x}_k)^2}, \;\; k = 1, \; 2
+    \end{equation}
+    
+    \indent Требуется повторить вычисления характеристик \eqref{char_5:1}, \eqref{char_5:2}, \eqref{char_5:3}  корреляционных коэффициентов \eqref{coeff_5:1}, \eqref{coeff_5:2}, \eqref{coeff_5:3} для смеси нормальных распределений
+    
+    \begin{equation}
+        \label{dist_5:2}
+        f(x, y) = 0.9 N(x, y, 0, 0, 1, 1, 0.9) + 0.1 N(x, y, 0, 0, 10, 10, -0.9)
+    \end{equation}
+    \indent Полученные выборки необходимо изобразить на плоскости и изобразить эллипс равновероятности }

@@ -1,0 +1,44 @@
+\newcommand{\threeimage}[3]{
+\begin{figure}[h!]  
+    \centering 
+    \subfigure[]{
+        \includegraphics[width=0.3\linewidth, height=0.3\linewidth]{#1} 
+        \label{fig:f_ #1} }  
+        %\hspace{4ex}
+    \subfigure[]{
+    \includegraphics[width=0.3\linewidth, height=0.3\linewidth]{#2} 
+    \label{fig:f_ #2} }
+   % \hspace{4ex}
+    \subfigure[]{ 
+        \includegraphics[width=0.3\linewidth, height=0.3\linewidth]{#3} 
+        \label{fig:f_ #3} }  
+    \caption{$\rho$:
+    \subref{fig:f_ #1} 0.0; 
+    \subref{fig:f_ #2} 0.5; 
+    \subref{fig:f_ #3} 0.9} 
+    \label{fig:f_ #1#2#3}
+\end{figure}}
+
+\newcommand{\tablewithresult}[8]{
+\begin{multicols}{2}
+    \begin{tabular}{ | c | c | c | c |}
+    \hline
+    $n = #1,\rho= #2$   & $r_{p}$ & $r_s$  & $r_q$ \\ \hline
+    $E(z)$               #3 \\ \hline
+    $E(z^2)$             #4 \\ \hline
+    $D(z)$               #5 \\ \hline
+    \end{tabular}
+    \columnbreak
+    \begin{equation}
+        \begin{aligned}
+        \notag
+            #6 \\
+            #7 \\
+            #8
+        \end{aligned}
+    \end{equation}
+\end{multicols}
+}
+
+
+

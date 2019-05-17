@@ -1,0 +1,199 @@
+% !TEX options=--shell-escape
+\documentclass[12pt]{article}
+\input{packages.tex}
+\input{borders.tex}
+\renewcommand{\baselinestretch}{1.4} 
+\newcommand{\RNumb}[1]{\uppercase\expandafter{\romannumeral #1\relax}}
+
+\begin{document}
+\input{title_page.tex}
+\input{commands.tex}
+
+
+\tableofcontents
+\addtocontents{toc}{~\hfill\par}
+\vfill ~
+\setcounter{section}{0}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newpage 
+\section*{Постановка задачи}
+\addcontentsline{toc}{section}{Постановка задачи}
+
+\indent{\indentВ данной лабораторной работе рассматриваются двумерные распределения. Необходимо сгенерировать двумерные выборки $x_n = (x_1, \ldots, x_n), \; y_n = (y_1, \ldots, y_n)$ размерами $n = 20,\;60,\;100$ из нормального двумерного распределения. Коэффициенты корреляции взять равными $\rho = 0, \; 0.5, \; 0.9$. Формула для плотности распределения приведена ниже}
+
+\begin{equation}
+	\label{dist:1}
+	N(x, y, 0, 0, 1, 1, \rho) = \frac{1}{2\pi \sqrt{1-\rho^2}}exp\left\{-\frac{1}{2(1-\rho^2)}(x^2 - 2\rho xy + y^2)\right\}
+\end{equation}
+\\
+\indent{Каждая выборка генерируется $N = 1000$ раз, и для каждоый выборки вычисляются среднее значение, среднее значение квадрата и дисперсия следующих коэффициентов}
+\begin{equation}
+    \label{coeff:1}
+    r_{p} = \frac{\displaystyle \sum_{i=1}^{n}{(x_i - \overline{x})(y_i - \overline{y})}}{\sqrt{\displaystyle{\sum_{i=1}^{n}{(x_i - \overline{x})^2 \sum_{i=1}^{n}(y_i - \overline{y})^2}}}} = \frac{cov(x, y)}{\sqrt{\sigma^2_x \sigma^2_y}} \text{ –– коэффициент корреляции Пирсона,}
+\end{equation}
+\indent{где $\overline{x}, \; \overline{y}$ –– выборочные средние $x_n, \; y_n$, $\sigma^2_x, \; \sigma^2_y$ –– выборочные дисперсии}
+
+\begin{equation}
+    \label{coeff:2}
+    r_s = \rho_{rg_x, rg_y} = \frac{cov(rg_x, rg_y)}{\sqrt{\sigma^2_x \sigma^2_y}} = 1 - \frac{6 \displaystyle \sum_{i=1}^{n}{d^2_i}}{n(n^2-1)} \text{ –– коэффициент корреляции Спирмена,}
+\end{equation}
+\indent{где $rg_x, \; rg_y$ –– ранговые переменные, $d_i = rg(x_i) - rg(y_i)$ –– разность двух рангов наблюдений. Формула для рассчета из источника \cite{ms_2}}
+
+\begin{equation}
+    \label{coeff:3}
+    r_q = \frac{(n_{\RNumb{1}} + n_{\RNumb{3}}) - (n_{\RNumb{2}} + n_{\RNumb{4}})}{n} \text{ –– квадрантный коэффициент корреляции,}
+\end{equation}
+\indent{где $n_i, \; i = \RNumb{1},\; \RNumb{2},\; \RNumb{3},\; \RNumb{4}$ –– число наблюдений, попавших в $i$ - ый квадрант на плоскости
+
+\indent{Приведем формулы для вычисления выборочного среднего, квадрата выборочного среднего и выборочной дисперсии в двумерном случае}
+\begin{equation}
+    \label{char:1}
+    \overline{x}_k = \frac{1}{n}\sum_{i=1}^{n}{x_{i_k}}, \;\; k = 1, \; 2
+\end{equation}
+
+\begin{equation}
+    \label{char:2}
+    \overline{x}^2_k = \frac{1}{n}\sum_{i=1}^{n}{x^2_{i_k}}, \;\; k = 1, \; 2
+\end{equation}
+
+\begin{equation}
+    \label{char:3}
+    \overline{\sigma}^2_k = \frac{1}{n}\sum_{i=1}^{n}{(x_{i_k}-\overline{x}_k)^2}, \;\; k = 1, \; 2
+\end{equation}
+
+\indent{Требуется повторить вычисления характеристик \eqref{char:1}, \eqref{char:2}, \eqref{char:3}  корреляционных коэффициентов \eqref{coeff:1}, \eqref{coeff:2}, \eqref{coeff:3} для смеси нормальных распределений}
+
+\begin{equation}
+    \label{dist:2}
+    f(x, y) = 0.9 N(x, y, 0, 0, 1, 1, 0.9) + 0.1 N(x, y, 0, 0, 10, 10, -0.9)
+\end{equation}
+
+\indent{Полученные выборки необходимо изобразить на плоскости и изобразить эллипс равновероятности }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\section*{Реализация}
+\addcontentsline{toc}{section}{Реализация}
+\indent{\indentДля выполнения поставленной задачи будем пользоваться библиотеками для языка Python: \textit{numpy, scipy} -- расчеты, законы распределения вероятностей; \textit{matplotlib, seaborn} -- визуализация результатов. Ход работы:}
+\begin{itemize}
+    \item Задаем распределение с заданными параметрами 
+    \item Формируем двойной цикл: внешний –– по объемам выборок $n$, внутренний –– по корреляционным коэффициентам $\rho$
+    \item На каждой итерации цикла для выборки строим 99\% доверительный эллипс, теоретическое описание которого находится по ссылкам \cite{ms_1}, \cite{ms_3}; изображаем выборки и эллипс в одних осях
+    \item Генерируем выборку и вычисляем корреляционные коэффициенты по формулам \eqref{coeff:1}, \eqref{coeff:2}, \eqref{coeff:3} 1000 раз 
+    \item Находим среднее, среднее квадрата и дисперсию корреляций по формулам \eqref{char:1}, \eqref{char:2}, \eqref{char:3}
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section*{Результат}
+\addcontentsline{toc}{section}{Результат}
+
+\textbf{Выборки из двумерного нормального распределения и 99\%-эллипс}
+\threeimage{20_0_0}{20_0_5}{20_0_9}
+\threeimage{60_0_0}{60_0_5}{60_0_9}
+\threeimage{100_0_0}{100_0_5}{100_0_9}
+
+\vspace{10.cm}
+\textbf{Характеристики для двумерного нормального распределения}\\
+
+\tablewithresult{20}{0.0}{& 0.0132 & 0.0086 & 0.0073}{& 0.0505 & 0.0517 & 0.0489}{& 0.0503 & 0.0517 & 0.0488}{E(r_q) < E(r_s) < E(r_p)}{E(r^2_q) < E(r^2_p) < E(r^2_s)}{D(r_q) < D(r_p) < D(r_s)}
+
+\tablewithresult{20}{0.5}{& 0.4893 & 0.4628 & 0.3263}{& 0.2712 & 0.2484 & 0.1530}{& 0.0318 & 0.0343 & 0.0465}{E(r_q) < E(r_s) < E(r_p)}{E(r^2_q) < E(r^2_s) < E(r^2_p)}{D(r_p) < D(r_s) < D(r_q)}
+
+\tablewithresult{20}{0.9}{& 0.8942 & 0.8645 & 0.7170}{& 0.8019 & 0.7518 & 0.5384}{& 0.0024 & 0.0044 & 0.0243}{E(r_q) < E(r_s) < E(r_p) }{E(r^2_q) < E(r^2_s) < E(r^2_p)}{D(r_p) < D(r_s) < D(r_q)}
+
+\tablewithresult{60}{0.0}{& 0.0024 & 0.0012 & -0.0028 }{& 0.0172 & 0.0175 & 0.0167}{& 0.0172 & 0.0175 & 0.0167}{E(r_s) < E(r_p) < E(r_q) }{E(r^2_q) < E(r^2_p) < E(r^2_s)}{D(r_q) < D(r_p) < D(r_s)}
+
+\tablewithresult{60}{0.5}{& 0.4942 & 0.4725 & 0.3372}{& 0.2544 & 0.2344 & 0.1287 }{& 0.0101 & 0.0111 & 0.0150}{E(r_q) < E(r_s) < E(r_p)}{E(r^2_q) < E(r^2_s) < E(r^2_p)}{D(r_p) < D(r_s) < D(r_q)}
+
+\tablewithresult{60}{0.9}{& 0.8991 & 0.8832 & 0.7103}{& 0.8090 & 0.7811 & 0.5122}{& 0.0007 & 0.0010 & 0.0077}{E(r_q) < E(r_s) < E(r_p)}{E(r^2_q) < E(r^2_s) < E(r^2_p)}{D(r_p) < D(r_s) < D(r_q)}
+
+\vspace{4.cm}
+
+\tablewithresult{100}{0.0}{& -0.0081 & -0.0064 & -0.0062}{& 0.0107 & 0.0108 & 0.0101}{& 0.0106 & 0.0107 & 0.0101}{E(r_q) < E(r_s) < E(r_p)}{E(r^2_q) < E(r^2_p) < E(r^2_s)}{D(r_q) < D(r_p) < D(r_s)}
+
+
+\tablewithresult{100}{0.5}{& 0.4980 & 0.4775 & 0.3341}{& 0.2538 & 0.2344 & 0.1206}{& 0.0058 & 0.0064 & 0.0090}{E(r_q) < E(r_s) < E(r_p)}{E(r^2_q) < E(r^2_s) < E(r^2_p)}{D(r_p) < D(r_s) < D(r_q)}
+
+\tablewithresult{100}{0.9}{& 0.8994 & 0.8868 & 0.7134}{& 0.8093 & 0.7869 & 0.5137}{& 0.0004 & 0.0006 & 0.0048}{E(r_q) < E(r_s) < E(r_p)}{E(r^2_q) < E(r^2_s) < E(r^2_p)}{D(r_p) < D(r_s) < D(r_q)}
+
+
+\textbf{Характеристики для смеси двумерных нормальных распределений}\\
+
+\begin{multicols}{2}
+    \begin{tabular}{ | c | c | c | c |}
+    \hline
+    $n = 20$           & $r_{p}$  & $r_s$  & $r_q$\\ \hline
+    $E(z)$               & 0.6886 & 0.6547 & 0.4866 \\ \hline
+    $E(z^2)$             & 0.4904 & 0.4485 & 0.2738 \\ \hline
+    $D(z)$               & 0.0162 & 0.0200 & 0.0370 \\ \hline
+    \end{tabular}
+    \columnbreak
+    \begin{equation}
+        \begin{aligned}
+        \notag
+            E(r_q) < E(r_s) < E(r_p) \\
+            E(r^2_q) < E(r^2_s) < E(r^2_p) \\
+            D(r_p) < D(r_s) < D(r_q)
+        \end{aligned}
+    \end{equation}
+\end{multicols}
+
+\begin{multicols}{2}
+    \begin{tabular}{ | c | c | c | c |}
+    \hline
+    $n = 60$           & $r_{p}$  & $r_s$  & $r_q$ \\ \hline
+    $E(z)$               & 0.6948 & 0.6702 & 0.4885 \\ \hline
+    $E(z^2)$             & 0.4874 & 0.4555 & 0.2506 \\ \hline
+    $D(z)$               & 0.0047 & 0.0063 & 0.0119 \\ \hline
+    \end{tabular}
+    \columnbreak
+    \begin{equation}
+        \begin{aligned}
+        \notag
+            E(r_q) < E(r_s) < E(r_p) \\
+            E(r^2_q) < E(r^2_s) < E(r^2_p) \\
+            D(r_p) < D(r_s) < D(r_q)
+        \end{aligned}
+    \end{equation}
+\end{multicols}
+
+\begin{multicols}{2}
+    \begin{tabular}{ | c | c | c | c |}
+    \hline
+    $n = 100$          & $r_{p}$  & $r_s$  & $r_q$ \\ \hline
+    $E(z)$               & 0.7003 & 0.6796 & 0.4952 \\ \hline
+    $E(z^2)$             & 0.4932 & 0.4653 & 0.2525 \\ \hline
+    $D(z)$               & 0.0028 & 0.0035 & 0.0073 \\ \hline
+    \end{tabular}
+    \columnbreak
+    \begin{equation}
+        \begin{aligned}
+        \notag
+            E(r_q) < E(r_s) < E(r_p) \\
+            E(r^2_q) < E(r^2_s) < E(r^2_p) \\
+            D(r_p) < D(r_s) < D(r_q)
+        \end{aligned}
+    \end{equation}
+\end{multicols}
+
+\vspace{1.cm}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\indent{Рассмотрим полученные соотношения. На некоррелированных данных квадрантный коэффициент корреляции имеет наименьшую дисперсию. Также дисперсия коэффициента Пирсона всегда меньше дисперсии коэффициента Спирмена вне зависимости от объема выборки или корреляции двумерного нормального распределения \eqref{dist:1}. Можно полагать, что в случае такого распределения лучше рассчитывать коэффициент корреляции Пирсона.}
+
+\indent{Неравенства для смеси двух нормальных распределений \eqref{dist:2} совпадают с неравенствами для двумерного нормального распределения с корреляциями $\rho = 0.5, \;0.9$.}
+
+\newpage
+\begin{thebibliography}{}
+    \bibitem{ms_1}\textit{Eisele, R.} (2018). How to plot a covariance error ellipse. URL: https://www.xarg.org/2018/04/how-to-plot-a-covariance-error-ellipse/
+    \bibitem{ms_2}\textit{Zwillinger, D. and Kokoska, S.} (2000). CRC Standard Probability and Statistics Tables and Formulae. Chapman \& Hall: New York. 2000.
+    \bibitem{ms_3}\textit{Ллойд Э., Ледерман У.} Справочник по прикладной статистике. Том 1. М.: Финансы и статистика, 1989. - 510 с.
+\end{thebibliography}
+
+
+\end{document}{}
