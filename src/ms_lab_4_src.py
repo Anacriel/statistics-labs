@@ -108,12 +108,8 @@ def plot_result(color, distrib, x_a=-4, x_b=4):
         plt.show()
 
 
-def main():
+if __name__ == "__main__":
     for distrib, param in distrib_dict.items():
         plot_result(distrib=distrib, color=param["color"])
-
-
-if __name__ == "__main__":
-    main()
 
 

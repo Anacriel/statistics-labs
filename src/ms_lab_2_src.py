@@ -92,13 +92,9 @@ def calculate(distrib):
         print_table(data=distr_list, distrib=distrib, ind=i, n=n_vec[i])
 
 
-def main():
+if __name__ == "__main__":
     for distrib in distributions:
         calculate(distrib)
-
-
-if __name__ == "__main__":
-    main()
 
 
 

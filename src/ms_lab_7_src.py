@@ -12,11 +12,7 @@ k = int(1 + 3.3 * math.log(n))  # = 16
 # 26,296
 
 
-def gaussian(x, mu, sig):
-    return 1 / (math.sqrt(2 * math.pi) * sig) * np.exp(-np.power((x - mu)/sig, 2) / 2)
-
-
-def maximal_likehood(x):
+def maximal_likelihood(x):
     mu0 = 0
     sigma0 = 1
 
@@ -54,9 +50,8 @@ def chi_sqr_criterion(x, mu_hat, sigma_hat):
         print("%.5f" % p_chunks[i - 1][0], "\n")
 
     print("Sum p: ", np.sum(p_chunks))
-    freq_i = np.ndarray(shape=(k - 1, 1))
+    freq_i = np.zeros(shape=(k - 1, 1))
     for i in range(k - 1):
-        freq_i[i] = 0
         for j in range(0, n):
             if x[j] > chunks[i] and x[j] < chunks[i + 1]:
                 freq_i[i] += 1
@@ -87,7 +82,7 @@ def main():
     sigma0 = 1
 
     x = np.random.normal(loc=mu0, scale=sigma0, size=n)
-    mu_hat, sigma_hat = maximal_likehood(x)
+    mu_hat, sigma_hat = maximal_likelihood(x)
     chi_sqr_criterion(x, mu_hat, sigma_hat)
 
 

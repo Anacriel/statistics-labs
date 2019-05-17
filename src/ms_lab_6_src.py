@@ -83,6 +83,7 @@ def main():
         theta2 = estimate_least_deviations(x, y)
         show_result(x, y, theta2, theta_ethalon, criterion="Least absolute deviations")
 
+        # Add error in second iteration
         y[0] += 10.
         y[-1] -= 10.
 

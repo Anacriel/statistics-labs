@@ -117,6 +117,5 @@ def main():
         show_coeffs(correlations_sum, head="Sum of distributions" + "\n" + "n = " + str(n))
 
 
-
 if __name__ == '__main__':
     main()

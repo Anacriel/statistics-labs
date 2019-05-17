@@ -90,11 +90,7 @@ def plot_result(distrib, color, x_a, x_b):
     plt.show()
 
 
-def main():
+if __name__ == "__main__":
     for distrib, param in distrib_dict.items():
         plot_result(distrib=distrib, color=param["color"],
                     x_a=param["interval"][0], x_b=param["interval"][1])
-
-
-if __name__ == "__main__":
-    main()
